@@ -36,6 +36,7 @@ function onFormSubmit(event) {
   if (uniqFirstLetter) {
     unique.innerHTML = uniqFirstLetter;
   } else {
+    unique.innerHTML = ' ';
     alert('The field is empty or a unique value does not exist');
   }
 }
