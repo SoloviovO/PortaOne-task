@@ -1,5 +1,5 @@
-const unique = document.querySelector('.unique');
 const formEl = document.querySelector('.form-search');
+const uniqueEl = document.querySelector('.unique');
 
 formEl.addEventListener('submit', onFormSubmit);
 
@@ -7,36 +7,22 @@ function onFormSubmit(event) {
   event.preventDefault();
   const inputStr = event.target.elements.uniqueEL.value;
 
-  const arrayOfString = inputStr
-    .replace(/[^a-zа-яё\s]/gi, ' ')
-    .replace(/ {1,}/g, ' ')
-    .trim()
-    .toLowerCase()
-    .split(' ');
+  const wordArray = inputStr.toLowerCase().match(/[a-zA-Zа-яА-ЯёЁіІїЇєЄ]+/g);
 
-  const uniqArrayFirstLetter = [];
-
-  for (const arrayItem of arrayOfString) {
-    const withoutFirstLetter = arrayItem.slice(1, arrayItem.length);
-    if (withoutFirstLetter.includes(arrayItem[0])) {
-    } else {
-      uniqArrayFirstLetter.push(arrayItem[0]);
-    }
+  if (!wordArray || wordArray.length === 0) {
+    uniqueEl.textContent = '';
+    alert('The field is empty or a unique value does not exist');
+    return;
   }
 
-  const getNonDuplicatedValues = arr =>
-    arr.filter((item, index) => {
-      arr.splice(index, 1);
-      const uniqLettter = !arr.includes(item);
-      arr.splice(index, 0, item);
-      return uniqLettter;
-    });
+  const uniqueFirstLetters = wordArray
+    .map(word => word[0])
+    .filter((letter, index, arr) => arr.indexOf(letter) === arr.lastIndexOf(letter));
 
-  const uniqFirstLetter = getNonDuplicatedValues(uniqArrayFirstLetter).slice(0, 1).join();
-  if (uniqFirstLetter) {
-    unique.innerHTML = uniqFirstLetter;
+  if (uniqueFirstLetters.length > 0) {
+    uniqueEl.textContent = uniqueFirstLetters[0];
   } else {
-    unique.innerHTML = ' ';
-    alert('The field is empty or a unique value does not exist');
+    uniqueEl.textContent = '';
+    alert('A unique letter does not exist');
   }
 }
